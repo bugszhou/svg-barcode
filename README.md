@@ -43,6 +43,12 @@ Supported barcodes:
 * Pharmacode
 * Codabar
 
+#### getSvgBase64
+
+```javascript
+let barcode = cnfBarcode("Hi!").getSvgBase64();
+```
+
 Examples for browsers:
 ----
 
