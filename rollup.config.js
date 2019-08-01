@@ -8,7 +8,7 @@ import globals from 'rollup-plugin-node-globals';
 import { terser } from "rollup-plugin-terser";
 
 export default {
-  external: [],
+  external: ['html2json'],
   input: 'src/entry/index.js',
   output: [
     // umd，第三方依赖未打包

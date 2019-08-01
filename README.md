@@ -7,7 +7,7 @@ description: a barcode generator
 
 支持生成不同颜色的一维码：
 
-[查看支持的颜色值](https://www.w3school.com.cn/cssref/css_colorsfull.asp)
+[查看支持的颜色值](https://www.w3school.com.cn/cssref/css_colorsfull.asp) <br>
 [查看JsBarcode](https://www.npmjs.com/package/jsbarcode)
 
 Introduction

@@ -1,9 +1,11 @@
-import { json2html as parser } from 'html2json';
+import html2json from 'html2json';
 import colors from './colors';
-import merge from "../help/merge";
-import { calculateEncodingAttributes, getTotalWidthOfEncodings, getMaximumHeightOfEncodings } from "./shared";
+import merge from "../help/merge.js";
+import { calculateEncodingAttributes, getTotalWidthOfEncodings, getMaximumHeightOfEncodings } from "./shared.js";
 
-const svgns = "http://www.w3.org/2000/svg";
+var svgns = "http://www.w3.org/2000/svg";
+
+const parser = html2json.json2html;
 
 class SVGRenderer {
   constructor(encodings, options) {
@@ -19,21 +21,21 @@ class SVGRenderer {
   }
 
   render() {
-    let currentX = this.options.marginLeft;
+    var currentX = this.options.marginLeft;
 
     this.prepareSVG();
-    for (let i = 0; i < this.encodings.length; i += 1) {
-      const encoding = this.encodings[i];
-      const encodingOptions = merge(this.options, encoding.options);
+    for (let i = 0; i < this.encodings.length; i++) {
+      var encoding = this.encodings[i];
+      var encodingOptions = merge(this.options, encoding.options);
 
-      const group = this.createGroup(currentX, encodingOptions.marginTop);
+      var group = this.createGroup(currentX, encodingOptions.marginTop);
 
       this.setGroupOptions(group, encodingOptions);
       //
       this.drawSvgBarcode(group, encodingOptions, encoding);
 
       this.drawSVGText(group, encodingOptions, encoding);
-      console.log('group ==>', group);
+
       this.svgJson.child.push(group);
 
       currentX += encoding.width;
@@ -48,65 +50,56 @@ class SVGRenderer {
     }
 
     calculateEncodingAttributes(this.encodings, this.options);
-    const totalWidth = getTotalWidthOfEncodings(this.encodings);
-    const maxHeight = getMaximumHeightOfEncodings(this.encodings);
+    var totalWidth = getTotalWidthOfEncodings(this.encodings);
+    var maxHeight = getMaximumHeightOfEncodings(this.encodings);
 
-    const width = totalWidth + this.options.marginLeft + this.options.marginRight;
+    var width = totalWidth + this.options.marginLeft + this.options.marginRight;
     this.setSvgAttributes(width, maxHeight);
 
     if (this.options.background) {
-      const rect = this.drawRect(0, 0, width, maxHeight, this.svgJson);
-      let color = colors[this.options.background.toLowerCase()];
+      let rect = this.drawRect(0, 0, width, maxHeight, this.svgJson),
+        color = colors[this.options.background.toLowerCase()];
       if (!color) {
         color = 'white';
         console.warn(`background Not Support ${this.options.background};`);
       }
-      rect.attr.style = `${rect.attr.style || ''}fill:${color};`;
+      rect.attr.style = (rect.attr.style || '') + `fill:${color};`;
     }
   }
 
   drawSvgBarcode(parent, options, encoding) {
-    const binary = encoding.data;
+    var binary = encoding.data;
 
     // Creates the barcode out of the encoded binary
-    let yFrom;
+    var yFrom;
     if (options.textPosition == "top") {
       yFrom = options.fontSize + options.textMargin;
-    } else {
+    }
+    else {
       yFrom = 0;
     }
 
-    let barWidth = 0;
-    let x = 0;
-    for (let b = 0; b < binary.length; b += 1) {
+    var barWidth = 0;
+    var x = 0;
+    for (var b = 0; b < binary.length; b++) {
       x = b * options.width + encoding.barcodePadding;
 
       if (binary[b] === "1") {
-        barWidth += 1;
+        barWidth++;
       } else if (barWidth > 0) {
-        this.drawRect(
-          x - options.width * barWidth, yFrom,
-          options.width * barWidth, options.height,
-          parent,
-        );
+        this.drawRect(x - options.width * barWidth, yFrom, options.width * barWidth, options.height, parent);
         barWidth = 0;
       }
     }
 
     // Last draw is needed since the barcode ends with 1
     if (barWidth > 0) {
-      this.drawRect(
-        x - options.width * (barWidth - 1),
-        yFrom,
-        options.width * barWidth,
-        options.height,
-        parent,
-      );
+      this.drawRect(x - options.width * (barWidth - 1), yFrom, options.width * barWidth, options.height, parent);
     }
   }
 
   setSvgAttributes(width, height) {
-    const svg = this.svgJson;
+    var svg = this.svgJson;
     svg.attr.width = `${width}px`;
     svg.attr.height = `${width}px`;
     svg.attr.x = `0px`;
@@ -114,10 +107,9 @@ class SVGRenderer {
     svg.attr.viewBox = `0 0 ${width} ${height}`;
     svg.attr.xmlns = svgns;
     svg.attr.version = '1.1';
-    svg.attr.style = `${svg.attr.style || ''};transform: translate(0,0);`;
+    svg.attr.style = (svg.attr.style || '') + ';transform: translate(0,0);';
   }
 
-  // eslint-disable-next-line
   createGroup(x, y) {
     return {
       node: 'element',
@@ -126,7 +118,7 @@ class SVGRenderer {
       child: [],
     };
   }
-  // eslint-disable-next-line
+
   setGroupOptions(group, options) {
     if (!group.attr) {
       group.attr = {};
@@ -136,11 +128,11 @@ class SVGRenderer {
       color = 'black';
       console.warn(`lineColor Not Support ${options.lineColor};`);
     }
-    group.attr.style = `${group.attr.style || ''};fill:${color};`;
+    group.attr.style = (group.attr.style || '') + `;fill:${color};`;
   }
 
   drawRect(x, y, width, height, parent) {
-    const rect = {
+    var rect = {
       node: 'element',
       tag: 'rect',
       attr: { style: '' },
@@ -158,7 +150,7 @@ class SVGRenderer {
   }
 
   drawSVGText(parent, options, encoding) {
-    const textElem = {
+    var textElem = {
       node: 'element',
       tag: 'text',
       attr: { style: '' },
@@ -168,13 +160,13 @@ class SVGRenderer {
 
     // Draw the text if displayValue is set
     if (options.displayValue) {
-      let x,
-        y;
+      var x, y;
       textElem.attr.style += `;font:${options.fontOptions} ${options.fontSize}px ${options.font};`;
 
       if (options.textPosition == "top") {
         y = options.fontSize - options.textMargin;
-      } else {
+      }
+      else {
         y = options.height + options.textMargin + options.fontSize;
       }
 
@@ -182,7 +174,8 @@ class SVGRenderer {
       if (options.textAlign == "left" || encoding.barcodePadding > 0) {
         x = 0;
         textElem.attr['text-anchor'] = `start`;
-      } else if (options.textAlign == "right") {
+      }
+      else if (options.textAlign == "right") {
         x = encoding.width - 1;
         textElem.attr['text-anchor'] = `end`;
       }
