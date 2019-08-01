@@ -1,0 +1,42 @@
+{
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "modules": false,
+        "targets": {
+          "esmodules": false
+        }
+      }
+    ]
+  ],
+  "plugins": [
+    "@babel/plugin-transform-strict-mode",
+    "@babel/plugin-transform-regenerator",
+    "@babel/plugin-proposal-class-properties",
+    "@babel/plugin-proposal-private-methods",
+    [
+      "@babel/plugin-transform-runtime",
+      {
+        "corejs": "2",
+        "helpers": true,
+        "regenerator": true
+      }
+    ]
+  ],
+  "comments": false,
+  "env": {
+    "production": {
+      "presets": [
+        [
+          "minify",
+          {
+            "builtIns": false,
+            "evaluate": false,
+            "mangle": false
+          }
+        ]
+      ]
+    }
+  }
+}
