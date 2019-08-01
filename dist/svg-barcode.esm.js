@@ -1,5 +1,3 @@
-import html2json from 'html2json';
-
 function createCommonjsModule(fn, module) {
 	return module = { exports: {} }, fn(module, module.exports), module.exports;
 }
@@ -1457,6 +1455,367 @@ function linearizeEncodings(encodings){function nextLevel(encoded){if(isArray$1(
 
 function fixOptions(options){return options.marginTop=options.marginTop||options.margin,options.marginBottom=options.marginBottom||options.margin,options.marginRight=options.marginRight||options.margin,options.marginLeft=options.marginLeft||options.margin,options}
 
+function createCommonjsModule$1(fn, module) {
+	return module = { exports: {} }, fn(module, module.exports), module.exports;
+}
+
+var _global$1 = createCommonjsModule$1(function (module) {
+// https://github.com/zloirock/core-js/issues/86#issuecomment-115759028
+var global = module.exports = typeof window != 'undefined' && window.Math == Math
+  ? window : typeof self != 'undefined' && self.Math == Math ? self
+  // eslint-disable-next-line no-new-func
+  : Function('return this')();
+if (typeof __g == 'number') __g = global; // eslint-disable-line no-undef
+});
+
+var _core$1 = createCommonjsModule$1(function (module) {
+var core = module.exports = { version: '2.6.9' };
+if (typeof __e == 'number') __e = core; // eslint-disable-line no-undef
+});
+var _core_1$1 = _core$1.version;
+
+var _aFunction$1 = function (it) {
+  if (typeof it != 'function') throw TypeError(it + ' is not a function!');
+  return it;
+};
+
+// optional / simple context binding
+
+var _ctx$1 = function (fn, that, length) {
+  _aFunction$1(fn);
+  if (that === undefined) return fn;
+  switch (length) {
+    case 1: return function (a) {
+      return fn.call(that, a);
+    };
+    case 2: return function (a, b) {
+      return fn.call(that, a, b);
+    };
+    case 3: return function (a, b, c) {
+      return fn.call(that, a, b, c);
+    };
+  }
+  return function (/* ...args */) {
+    return fn.apply(that, arguments);
+  };
+};
+
+var _isObject$1 = function (it) {
+  return typeof it === 'object' ? it !== null : typeof it === 'function';
+};
+
+var _anObject$1 = function (it) {
+  if (!_isObject$1(it)) throw TypeError(it + ' is not an object!');
+  return it;
+};
+
+var _fails$1 = function (exec) {
+  try {
+    return !!exec();
+  } catch (e) {
+    return true;
+  }
+};
+
+// Thank's IE8 for his funny defineProperty
+var _descriptors$1 = !_fails$1(function () {
+  return Object.defineProperty({}, 'a', { get: function () { return 7; } }).a != 7;
+});
+
+var document$3 = _global$1.document;
+// typeof document.createElement is 'object' in old IE
+var is$1 = _isObject$1(document$3) && _isObject$1(document$3.createElement);
+var _domCreate$1 = function (it) {
+  return is$1 ? document$3.createElement(it) : {};
+};
+
+var _ie8DomDefine$1 = !_descriptors$1 && !_fails$1(function () {
+  return Object.defineProperty(_domCreate$1('div'), 'a', { get: function () { return 7; } }).a != 7;
+});
+
+// 7.1.1 ToPrimitive(input [, PreferredType])
+
+// instead of the ES6 spec version, we didn't implement @@toPrimitive case
+// and the second argument - flag - preferred type is a string
+var _toPrimitive$1 = function (it, S) {
+  if (!_isObject$1(it)) return it;
+  var fn, val;
+  if (S && typeof (fn = it.toString) == 'function' && !_isObject$1(val = fn.call(it))) return val;
+  if (typeof (fn = it.valueOf) == 'function' && !_isObject$1(val = fn.call(it))) return val;
+  if (!S && typeof (fn = it.toString) == 'function' && !_isObject$1(val = fn.call(it))) return val;
+  throw TypeError("Can't convert object to primitive value");
+};
+
+var dP$2 = Object.defineProperty;
+
+var f$7 = _descriptors$1 ? Object.defineProperty : function defineProperty(O, P, Attributes) {
+  _anObject$1(O);
+  P = _toPrimitive$1(P, true);
+  _anObject$1(Attributes);
+  if (_ie8DomDefine$1) try {
+    return dP$2(O, P, Attributes);
+  } catch (e) { /* empty */ }
+  if ('get' in Attributes || 'set' in Attributes) throw TypeError('Accessors not supported!');
+  if ('value' in Attributes) O[P] = Attributes.value;
+  return O;
+};
+
+var _objectDp$1 = {
+	f: f$7
+};
+
+var _propertyDesc$1 = function (bitmap, value) {
+  return {
+    enumerable: !(bitmap & 1),
+    configurable: !(bitmap & 2),
+    writable: !(bitmap & 4),
+    value: value
+  };
+};
+
+var _hide$1 = _descriptors$1 ? function (object, key, value) {
+  return _objectDp$1.f(object, key, _propertyDesc$1(1, value));
+} : function (object, key, value) {
+  object[key] = value;
+  return object;
+};
+
+var hasOwnProperty$1 = {}.hasOwnProperty;
+var _has$1 = function (it, key) {
+  return hasOwnProperty$1.call(it, key);
+};
+
+var PROTOTYPE$3 = 'prototype';
+
+var $export$1 = function (type, name, source) {
+  var IS_FORCED = type & $export$1.F;
+  var IS_GLOBAL = type & $export$1.G;
+  var IS_STATIC = type & $export$1.S;
+  var IS_PROTO = type & $export$1.P;
+  var IS_BIND = type & $export$1.B;
+  var IS_WRAP = type & $export$1.W;
+  var exports = IS_GLOBAL ? _core$1 : _core$1[name] || (_core$1[name] = {});
+  var expProto = exports[PROTOTYPE$3];
+  var target = IS_GLOBAL ? _global$1 : IS_STATIC ? _global$1[name] : (_global$1[name] || {})[PROTOTYPE$3];
+  var key, own, out;
+  if (IS_GLOBAL) source = name;
+  for (key in source) {
+    // contains in native
+    own = !IS_FORCED && target && target[key] !== undefined;
+    if (own && _has$1(exports, key)) continue;
+    // export native or passed
+    out = own ? target[key] : source[key];
+    // prevent global pollution for namespaces
+    exports[key] = IS_GLOBAL && typeof target[key] != 'function' ? source[key]
+    // bind timers to global for call from export context
+    : IS_BIND && own ? _ctx$1(out, _global$1)
+    // wrap global constructors for prevent change them in library
+    : IS_WRAP && target[key] == out ? (function (C) {
+      var F = function (a, b, c) {
+        if (this instanceof C) {
+          switch (arguments.length) {
+            case 0: return new C();
+            case 1: return new C(a);
+            case 2: return new C(a, b);
+          } return new C(a, b, c);
+        } return C.apply(this, arguments);
+      };
+      F[PROTOTYPE$3] = C[PROTOTYPE$3];
+      return F;
+    // make static versions for prototype methods
+    })(out) : IS_PROTO && typeof out == 'function' ? _ctx$1(Function.call, out) : out;
+    // export proto methods to core.%CONSTRUCTOR%.methods.%NAME%
+    if (IS_PROTO) {
+      (exports.virtual || (exports.virtual = {}))[key] = out;
+      // export proto methods to core.%CONSTRUCTOR%.prototype.%NAME%
+      if (type & $export$1.R && expProto && !expProto[key]) _hide$1(expProto, key, out);
+    }
+  }
+};
+// type bitmap
+$export$1.F = 1;   // forced
+$export$1.G = 2;   // global
+$export$1.S = 4;   // static
+$export$1.P = 8;   // proto
+$export$1.B = 16;  // bind
+$export$1.W = 32;  // wrap
+$export$1.U = 64;  // safe
+$export$1.R = 128; // real proto method for `library`
+var _export$1 = $export$1;
+
+var toString$2 = {}.toString;
+
+var _cof$1 = function (it) {
+  return toString$2.call(it).slice(8, -1);
+};
+
+// 7.2.2 IsArray(argument)
+
+var _isArray$1 = Array.isArray || function isArray(arg) {
+  return _cof$1(arg) == 'Array';
+};
+
+// 22.1.2.2 / 15.4.3.2 Array.isArray(arg)
+
+
+_export$1(_export$1.S, 'Array', { isArray: _isArray$1 });
+
+var isArray$2 = _core$1.Array.isArray;
+
+var isArray$1$1 = isArray$2;
+
+// 7.2.1 RequireObjectCoercible(argument)
+var _defined$1 = function (it) {
+  if (it == undefined) throw TypeError("Can't call method on  " + it);
+  return it;
+};
+
+// 7.1.13 ToObject(argument)
+
+var _toObject$1 = function (it) {
+  return Object(_defined$1(it));
+};
+
+// fallback for non-array-like ES3 and non-enumerable old V8 strings
+
+// eslint-disable-next-line no-prototype-builtins
+var _iobject$1 = Object('z').propertyIsEnumerable(0) ? Object : function (it) {
+  return _cof$1(it) == 'String' ? it.split('') : Object(it);
+};
+
+// to indexed object, toObject with fallback for non-array-like ES3 strings
+
+
+var _toIobject$1 = function (it) {
+  return _iobject$1(_defined$1(it));
+};
+
+// 7.1.4 ToInteger
+var ceil$1 = Math.ceil;
+var floor$1 = Math.floor;
+var _toInteger$1 = function (it) {
+  return isNaN(it = +it) ? 0 : (it > 0 ? floor$1 : ceil$1)(it);
+};
+
+// 7.1.15 ToLength
+
+var min$2 = Math.min;
+var _toLength$1 = function (it) {
+  return it > 0 ? min$2(_toInteger$1(it), 0x1fffffffffffff) : 0; // pow(2, 53) - 1 == 9007199254740991
+};
+
+var max$1 = Math.max;
+var min$1$1 = Math.min;
+var _toAbsoluteIndex$1 = function (index, length) {
+  index = _toInteger$1(index);
+  return index < 0 ? max$1(index + length, 0) : min$1$1(index, length);
+};
+
+// false -> Array#indexOf
+// true  -> Array#includes
+
+
+
+var _arrayIncludes$1 = function (IS_INCLUDES) {
+  return function ($this, el, fromIndex) {
+    var O = _toIobject$1($this);
+    var length = _toLength$1(O.length);
+    var index = _toAbsoluteIndex$1(fromIndex, length);
+    var value;
+    // Array#includes uses SameValueZero equality algorithm
+    // eslint-disable-next-line no-self-compare
+    if (IS_INCLUDES && el != el) while (length > index) {
+      value = O[index++];
+      // eslint-disable-next-line no-self-compare
+      if (value != value) return true;
+    // Array#indexOf ignores holes, Array#includes - not
+    } else for (;length > index; index++) if (IS_INCLUDES || index in O) {
+      if (O[index] === el) return IS_INCLUDES || index || 0;
+    } return !IS_INCLUDES && -1;
+  };
+};
+
+var _shared$1 = createCommonjsModule$1(function (module) {
+var SHARED = '__core-js_shared__';
+var store = _global$1[SHARED] || (_global$1[SHARED] = {});
+
+(module.exports = function (key, value) {
+  return store[key] || (store[key] = value !== undefined ? value : {});
+})('versions', []).push({
+  version: _core$1.version,
+  mode:  'pure' ,
+  copyright: '© 2019 Denis Pushkarev (zloirock.ru)'
+});
+});
+
+var id$1 = 0;
+var px$1 = Math.random();
+var _uid$1 = function (key) {
+  return 'Symbol('.concat(key === undefined ? '' : key, ')_', (++id$1 + px$1).toString(36));
+};
+
+var shared$1 = _shared$1('keys');
+
+var _sharedKey$1 = function (key) {
+  return shared$1[key] || (shared$1[key] = _uid$1(key));
+};
+
+var arrayIndexOf$1 = _arrayIncludes$1(false);
+var IE_PROTO$3 = _sharedKey$1('IE_PROTO');
+
+var _objectKeysInternal$1 = function (object, names) {
+  var O = _toIobject$1(object);
+  var i = 0;
+  var result = [];
+  var key;
+  for (key in O) if (key != IE_PROTO$3) _has$1(O, key) && result.push(key);
+  // Don't enum bug & hidden keys
+  while (names.length > i) if (_has$1(O, key = names[i++])) {
+    ~arrayIndexOf$1(result, key) || result.push(key);
+  }
+  return result;
+};
+
+// IE 8- don't enum bug keys
+var _enumBugKeys$1 = (
+  'constructor,hasOwnProperty,isPrototypeOf,propertyIsEnumerable,toLocaleString,toString,valueOf'
+).split(',');
+
+// 19.1.2.14 / 15.2.3.14 Object.keys(O)
+
+
+
+var _objectKeys$1 = Object.keys || function keys(O) {
+  return _objectKeysInternal$1(O, _enumBugKeys$1);
+};
+
+// most Object methods by ES6 should accept primitives
+
+
+
+var _objectSap$1 = function (KEY, exec) {
+  var fn = (_core$1.Object || {})[KEY] || Object[KEY];
+  var exp = {};
+  exp[KEY] = exec(fn);
+  _export$1(_export$1.S + _export$1.F * _fails$1(function () { fn(1); }), 'Object', exp);
+};
+
+// 19.1.2.14 Object.keys(O)
+
+
+
+_objectSap$1('keys', function () {
+  return function keys(it) {
+    return _objectKeys$1(_toObject$1(it));
+  };
+});
+
+var keys$2 = _core$1.Object.keys;
+
+var keys$1$1 = keys$2;
+
+function q(v){return "\""+v+"\""}function json2html(json){var child="";json.child&&(child=json.child.map(function(c){return json2html(c)}).join(""));var attr="";if(json.attr&&(attr=keys$1$1(json.attr).map(function(key){var value=json.attr[key];return isArray$1$1(value)&&(value=value.join(" ")),key+"="+q(value)}).join(" "),""!==attr&&(attr=" "+attr)),"element"===json.node){var tag=json.tag;if(-1<["area","base","basefont","br","col","frame","hr","img","input","isindex","link","meta","param","embed"].indexOf(tag))return "<"+json.tag+attr+"/>";var open="<"+json.tag+attr+">",close="</"+json.tag+">";return open+child+close}return "text"===json.node?json.text:"comment"===json.node?"<!--"+json.text+"-->":"root"===json.node?child:void 0}
+
 var black = "#000000";
 var navy = "#000080";
 var darkblue = "#00008b";
@@ -1882,7 +2241,7 @@ var colors = {
 
 function getEncodingHeight(encoding,options){return options.height+(options.displayValue&&0<encoding.text.length?options.fontSize+options.textMargin:0)+options.marginTop+options.marginBottom}function getBarcodePadding(textWidth,barcodeWidth,options){if(options.displayValue&&barcodeWidth<textWidth){if("center"==options.textAlign)return Math.floor((textWidth-barcodeWidth)/2);if("left"==options.textAlign)return 0;if("right"==options.textAlign)return Math.floor(textWidth-barcodeWidth)}return 0}function calculateEncodingAttributes(encodings,barcodeOptions,context){for(var i=0;i<encodings.length;i++){var textWidth,encoding=encodings[i],options=merge(barcodeOptions,encoding.options);textWidth=options.displayValue?messureText(encoding.text,options,context):0;var barcodeWidth=encoding.data.length*options.width;encoding.width=Math.ceil(Math.max(textWidth,barcodeWidth)),encoding.height=getEncodingHeight(encoding,options),encoding.barcodePadding=getBarcodePadding(textWidth,barcodeWidth,options);}}function getTotalWidthOfEncodings(encodings){for(var totalWidth=0,i=0;i<encodings.length;i++)totalWidth+=encodings[i].width;return totalWidth}function getMaximumHeightOfEncodings(encodings){for(var maxHeight=0,i=0;i<encodings.length;i++)encodings[i].height>maxHeight&&(maxHeight=encodings[i].height);return maxHeight}function messureText(string,options,context){var ctx;if(context)ctx=context;else if("undefined"!=typeof document)ctx=document.createElement("canvas").getContext("2d");else return 0;ctx.font="".concat(options.fontOptions," ").concat(options.fontSize,"px ").concat(options.font);var size=ctx.measureText(string).width;return size}
 
-var svgns="http://www.w3.org/2000/svg",parser=html2json.json2html,SVGRenderer=function(){function SVGRenderer(encodings,options){classCallCheck(this,SVGRenderer),this.svgJson={node:"element",tag:"svg",attr:{style:""},child:[]},this.barCode="",this.encodings=encodings,this.options=options;}return createClass(SVGRenderer,[{key:"render",value:function render(){var currentX=this.options.marginLeft;this.prepareSVG();for(var i=0;i<this.encodings.length;i++){var encoding=this.encodings[i],encodingOptions=merge(this.options,encoding.options),group=this.createGroup(currentX,encodingOptions.marginTop);this.setGroupOptions(group,encodingOptions),this.drawSvgBarcode(group,encodingOptions,encoding),this.drawSVGText(group,encodingOptions,encoding),this.svgJson.child.push(group),currentX+=encoding.width;}this.barCode=parser(this.svgJson);}},{key:"prepareSVG",value:function prepareSVG(){for(;this.svgJson.child[0];)this.svgJson.child.shift();calculateEncodingAttributes(this.encodings,this.options);var totalWidth=getTotalWidthOfEncodings(this.encodings),maxHeight=getMaximumHeightOfEncodings(this.encodings),width=totalWidth+this.options.marginLeft+this.options.marginRight;if(this.setSvgAttributes(width,maxHeight),this.options.background){var rect=this.drawRect(0,0,width,maxHeight,this.svgJson),color=colors[this.options.background.toLowerCase()];color||(color="white",console.warn("background Not Support ".concat(this.options.background,";"))),rect.attr.style=(rect.attr.style||"")+"fill:".concat(color,";");}}},{key:"drawSvgBarcode",value:function drawSvgBarcode(parent,options,encoding){var yFrom,binary=encoding.data;yFrom="top"==options.textPosition?options.fontSize+options.textMargin:0;for(var barWidth=0,x=0,b=0;b<binary.length;b++)x=b*options.width+encoding.barcodePadding,"1"===binary[b]?barWidth++:0<barWidth&&(this.drawRect(x-options.width*barWidth,yFrom,options.width*barWidth,options.height,parent),barWidth=0);0<barWidth&&this.drawRect(x-options.width*(barWidth-1),yFrom,options.width*barWidth,options.height,parent);}},{key:"setSvgAttributes",value:function setSvgAttributes(width,height){var svg=this.svgJson;svg.attr.width="".concat(width,"px"),svg.attr.height="".concat(width,"px"),svg.attr.x="0px",svg.attr.y="0px",svg.attr.viewBox="0 0 ".concat(width," ").concat(height),svg.attr.xmlns=svgns,svg.attr.version="1.1",svg.attr.style=(svg.attr.style||"")+";transform: translate(0,0);";}},{key:"createGroup",value:function createGroup(x,y){return {node:"element",tag:"g",attr:{transform:"translate(".concat(x,", ").concat(y,")")},child:[]}}},{key:"setGroupOptions",value:function setGroupOptions(group,options){group.attr||(group.attr={});var color=colors[options.lineColor.toLowerCase()];color||(color="black",console.warn("lineColor Not Support ".concat(options.lineColor,";"))),group.attr.style=(group.attr.style||"")+";fill:".concat(color,";");}},{key:"drawRect",value:function drawRect(x,y,width,height,parent){var rect={node:"element",tag:"rect",attr:{style:""}};return rect.attr.x=x,rect.attr.y=y,rect.attr.width=width,rect.attr.height=height,isArray$1(parent.child)&&parent.child.push(rect),rect}},{key:"drawSVGText",value:function drawSVGText(parent,options,encoding){var textElem={node:"element",tag:"text",attr:{style:""},text:"",child:[]};if(options.displayValue){var x,y;textElem.attr.style+=";font:".concat(options.fontOptions," ").concat(options.fontSize,"px ").concat(options.font,";"),y="top"==options.textPosition?options.fontSize-options.textMargin:options.height+options.textMargin+options.fontSize,"left"==options.textAlign||0<encoding.barcodePadding?(x=0,textElem.attr["text-anchor"]="start"):"right"==options.textAlign?(x=encoding.width-1,textElem.attr["text-anchor"]="end"):(x=encoding.width/2,textElem.attr["text-anchor"]="middle"),textElem.attr.x=x,textElem.attr.y=y,textElem.child.push({node:"text",tag:"",text:encoding.text}),parent.child.push(textElem);}}}]),SVGRenderer}();
+var svgns="http://www.w3.org/2000/svg",SVGRenderer=function(){function SVGRenderer(encodings,options){classCallCheck(this,SVGRenderer),this.svgJson={node:"element",tag:"svg",attr:{style:""},child:[]},this.barCode="",this.encodings=encodings,this.options=options;}return createClass(SVGRenderer,[{key:"render",value:function render(){var currentX=this.options.marginLeft;this.prepareSVG();for(var i=0;i<this.encodings.length;i++){var encoding=this.encodings[i],encodingOptions=merge(this.options,encoding.options),group=this.createGroup(currentX,encodingOptions.marginTop);this.setGroupOptions(group,encodingOptions),this.drawSvgBarcode(group,encodingOptions,encoding),this.drawSVGText(group,encodingOptions,encoding),this.svgJson.child.push(group),currentX+=encoding.width;}this.barCode=json2html(this.svgJson);}},{key:"prepareSVG",value:function prepareSVG(){for(;this.svgJson.child[0];)this.svgJson.child.shift();calculateEncodingAttributes(this.encodings,this.options);var totalWidth=getTotalWidthOfEncodings(this.encodings),maxHeight=getMaximumHeightOfEncodings(this.encodings),width=totalWidth+this.options.marginLeft+this.options.marginRight;if(this.setSvgAttributes(width,maxHeight),this.options.background){var rect=this.drawRect(0,0,width,maxHeight,this.svgJson),color=colors[this.options.background.toLowerCase()];color||(color="white",console.warn("background Not Support ".concat(this.options.background,";"))),rect.attr.style=(rect.attr.style||"")+"fill:".concat(color,";");}}},{key:"drawSvgBarcode",value:function drawSvgBarcode(parent,options,encoding){var yFrom,binary=encoding.data;yFrom="top"==options.textPosition?options.fontSize+options.textMargin:0;for(var barWidth=0,x=0,b=0;b<binary.length;b++)x=b*options.width+encoding.barcodePadding,"1"===binary[b]?barWidth++:0<barWidth&&(this.drawRect(x-options.width*barWidth,yFrom,options.width*barWidth,options.height,parent),barWidth=0);0<barWidth&&this.drawRect(x-options.width*(barWidth-1),yFrom,options.width*barWidth,options.height,parent);}},{key:"setSvgAttributes",value:function setSvgAttributes(width,height){var svg=this.svgJson;svg.attr.width="".concat(width,"px"),svg.attr.height="".concat(width,"px"),svg.attr.x="0px",svg.attr.y="0px",svg.attr.viewBox="0 0 ".concat(width," ").concat(height),svg.attr.xmlns=svgns,svg.attr.version="1.1",svg.attr.style=(svg.attr.style||"")+";transform: translate(0,0);";}},{key:"createGroup",value:function createGroup(x,y){return {node:"element",tag:"g",attr:{transform:"translate(".concat(x,", ").concat(y,")")},child:[]}}},{key:"setGroupOptions",value:function setGroupOptions(group,options){group.attr||(group.attr={});var color=colors[options.lineColor.toLowerCase()];color||(color="black",console.warn("lineColor Not Support ".concat(options.lineColor,";"))),group.attr.style=(group.attr.style||"")+";fill:".concat(color,";");}},{key:"drawRect",value:function drawRect(x,y,width,height,parent){var rect={node:"element",tag:"rect",attr:{style:""}};return rect.attr.x=x,rect.attr.y=y,rect.attr.width=width,rect.attr.height=height,isArray$1(parent.child)&&parent.child.push(rect),rect}},{key:"drawSVGText",value:function drawSVGText(parent,options,encoding){var textElem={node:"element",tag:"text",attr:{style:""},text:"",child:[]};if(options.displayValue){var x,y;textElem.attr.style+=";font:".concat(options.fontOptions," ").concat(options.fontSize,"px ").concat(options.font,";"),y="top"==options.textPosition?options.fontSize-options.textMargin:options.height+options.textMargin+options.fontSize,"left"==options.textAlign||0<encoding.barcodePadding?(x=0,textElem.attr["text-anchor"]="start"):"right"==options.textAlign?(x=encoding.width-1,textElem.attr["text-anchor"]="end"):(x=encoding.width/2,textElem.attr["text-anchor"]="middle"),textElem.attr.x=x,textElem.attr.y=y,textElem.child.push({node:"text",tag:"",text:encoding.text}),parent.child.push(textElem);}}}]),SVGRenderer}();
 
 var renderers = {SVGRenderer:SVGRenderer};
 
@@ -1996,7 +2355,7 @@ var _validateCollection = function (it, TYPE) {
   return it;
 };
 
-var dP$2 = _objectDp.f;
+var dP$3 = _objectDp.f;
 
 
 
@@ -2079,7 +2438,7 @@ var _collectionStrong = {
         return !!getEntry(_validateCollection(this, NAME), key);
       }
     });
-    if (_descriptors) dP$2(C.prototype, 'size', {
+    if (_descriptors) dP$3(C.prototype, 'size', {
       get: function () {
         return _validateCollection(this, NAME)[SIZE];
       }
@@ -2207,7 +2566,7 @@ var _arrayMethods = function (TYPE, $create) {
   };
 };
 
-var dP$3 = _objectDp.f;
+var dP$4 = _objectDp.f;
 var each = _arrayMethods(0);
 
 
@@ -2239,7 +2598,7 @@ var _collection = function (NAME, wrapper, methods, common, IS_MAP, IS_WEAK) {
         return IS_ADDER ? this : result;
       });
     });
-    IS_WEAK || dP$3(C.prototype, 'size', {
+    IS_WEAK || dP$4(C.prototype, 'size', {
       get: function () {
         return this._c.size;
       }
