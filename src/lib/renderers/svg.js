@@ -1,11 +1,9 @@
-import html2json from 'html2json';
+import { json2html as parser } from 'html-parser-util';
 import colors from './colors';
 import merge from "../help/merge.js";
 import { calculateEncodingAttributes, getTotalWidthOfEncodings, getMaximumHeightOfEncodings } from "./shared.js";
 
 var svgns = "http://www.w3.org/2000/svg";
-
-const parser = html2json.json2html;
 
 class SVGRenderer {
   constructor(encodings, options) {
