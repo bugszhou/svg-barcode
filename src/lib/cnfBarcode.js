@@ -122,7 +122,7 @@ API.prototype.getSvg = function() {
 };
 
 // 获取svg base64文本
-API.prototype.getSvgBase64 = function() {
+API.prototype.getSvgDataURI = function() {
   return `data:image/svg+xml;utf8,${encodeURIComponent(this.barCodes.svg)}`;
 };
 

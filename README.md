@@ -42,10 +42,17 @@ Supported barcodes:
 * Pharmacode
 * Codabar
 
-#### getSvgBase64
+#### getSvgDataURI
+
+Use dataURI
 
 ```javascript
-let barcode = cnfBarcode("Hi!").getSvgBase64();
+let barcode = cnfBarcode("Hi!").getSvgDataURI();
+```
+##### Result:
+
+```
+data:image/svg+xml;utf8,........
 ```
 
 Examples for browsers:
