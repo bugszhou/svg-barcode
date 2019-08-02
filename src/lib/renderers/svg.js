@@ -1,5 +1,4 @@
 import { json2html as parser } from 'html-parser-util';
-import colors from './colors';
 import merge from "../help/merge.js";
 import { calculateEncodingAttributes, getTotalWidthOfEncodings, getMaximumHeightOfEncodings } from "./shared.js";
 
@@ -59,13 +58,8 @@ class SVGRenderer {
     this.setSvgAttributes(width, maxHeight);
 
     if (this.options.background) {
-      let rect = this.drawRect(0, 0, width, maxHeight, this.svgJson),
-        color = colors[this.options.background.toLowerCase()];
-      if (!color) {
-        color = 'white';
-        console.warn(`background Not Support ${this.options.background};`);
-      }
-      rect.attr.style = (rect.attr.style || '') + `fill:${color};`;
+      let rect = this.drawRect(0, 0, width, maxHeight, this.svgJson);
+      rect.attr.style = (rect.attr.style || '') + `fill:${this.options.background};`;
     }
   }
 
@@ -138,12 +132,7 @@ class SVGRenderer {
     if (!group.attr) {
       group.attr = {};
     }
-    let color = colors[options.lineColor.toLowerCase()];
-    if (!color) {
-      color = 'black';
-      console.warn(`lineColor Not Support ${options.lineColor};`);
-    }
-    group.attr.style = (group.attr.style || '') + `;fill:${color};`;
+    group.attr.style = (group.attr.style || '') + `;fill:${options.lineColor};`;
   }
 
   drawRect(x, y, width, height, parent) {
