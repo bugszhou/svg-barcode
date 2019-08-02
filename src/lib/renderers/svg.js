@@ -26,7 +26,7 @@ class SVGRenderer {
       var encoding = this.encodings[i];
       var encodingOptions = merge(this.options, encoding.options);
 
-      var group = this.createGroup(currentX, encodingOptions.marginTop);
+      var group = this.createGroup(currentX, encodingOptions.marginTop, this.options.useTranslate);
 
       this.setGroupOptions(group, encodingOptions);
       //
@@ -51,7 +51,11 @@ class SVGRenderer {
     var totalWidth = getTotalWidthOfEncodings(this.encodings);
     var maxHeight = getMaximumHeightOfEncodings(this.encodings);
 
-    var width = totalWidth + this.options.marginLeft + this.options.marginRight;
+    // var width = totalWidth + this.options.marginLeft + this.options.marginRight;
+    var width = totalWidth;
+    if (this.options.useTranslate) {
+      width = totalWidth + this.options.marginLeft + this.options.marginRight;
+    }
     this.setSvgAttributes(width, maxHeight);
 
     if (this.options.background) {
@@ -105,14 +109,23 @@ class SVGRenderer {
     svg.attr.viewBox = `0 0 ${width} ${height}`;
     svg.attr.xmlns = svgns;
     svg.attr.version = '1.1';
-    svg.attr.style = (svg.attr.style || '') + ';transform: translate(0,0);';
+    // svg.attr.style = (svg.attr.style || '') + ';transform: translate(0,0);';
   }
 
-  createGroup(x, y) {
+  createGroup(x, y, useTranslate) {
+    if (useTranslate) {
+      return {
+        node: 'element',
+        tag: 'g',
+        attr: { transform: `translate(${x}, ${y})` },
+        child: [],
+      };
+    }
+    // 支付宝小程序不支持transform: `translate(${x}, ${y})`
     return {
       node: 'element',
       tag: 'g',
-      attr: { transform: `translate(${x}, ${y})` },
+      attr: {},
       child: [],
     };
   }
