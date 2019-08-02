@@ -109,7 +109,7 @@ class SVGRenderer {
     svg.attr.viewBox = `0 0 ${width} ${height}`;
     svg.attr.xmlns = svgns;
     svg.attr.version = '1.1';
-    svg.attr.style = (svg.attr.style || '') + ';transform: translate(0,0);';
+    // svg.attr.style = (svg.attr.style || '') + ';transform: translate(0,0);';
   }
 
   createGroup(x, y, useTranslate) {
