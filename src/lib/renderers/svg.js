@@ -89,14 +89,14 @@ class SVGRenderer {
       if (binary[b] === "1") {
         barWidth++;
       } else if (barWidth > 0) {
-        this.drawRect(x - options.width * barWidth, yFrom, options.width * barWidth, options.height, parent);
+        this.drawRect(x - options.width * barWidth + parent.x, yFrom, options.width * barWidth, options.height, parent);
         barWidth = 0;
       }
     }
 
     // Last draw is needed since the barcode ends with 1
     if (barWidth > 0) {
-      this.drawRect(x - options.width * (barWidth - 1), yFrom, options.width * barWidth, options.height, parent);
+      this.drawRect(x - options.width * (barWidth - 1) + parent.x, yFrom, options.width * barWidth, options.height, parent);
     }
   }
 
@@ -109,7 +109,7 @@ class SVGRenderer {
     svg.attr.viewBox = `0 0 ${width} ${height}`;
     svg.attr.xmlns = svgns;
     svg.attr.version = '1.1';
-    // svg.attr.style = (svg.attr.style || '') + ';transform: translate(0,0);';
+    svg.attr.style = (svg.attr.style || '') + ';transform: translate(0,0);';
   }
 
   createGroup(x, y, useTranslate) {
@@ -117,6 +117,8 @@ class SVGRenderer {
       return {
         node: 'element',
         tag: 'g',
+        x: 0,
+        y: 0,
         attr: { transform: `translate(${x}, ${y})` },
         child: [],
       };
@@ -125,6 +127,8 @@ class SVGRenderer {
     return {
       node: 'element',
       tag: 'g',
+      x,
+      y,
       attr: {},
       child: [],
     };
@@ -196,7 +200,7 @@ class SVGRenderer {
         textElem.attr['text-anchor'] = `middle`;
       }
 
-      textElem.attr.x = x;
+      textElem.attr.x = x + parent.x;
       textElem.attr.y = y;
 
       textElem.child.push({
