@@ -1,6 +1,6 @@
 {
     "name": "cnf-barcode",
-    "version": "1.0.9",
+    "version": "1.0.10",
     "description": "a barcode generator",
     "author": "bugszhou | Email:bugszhou@outlook.com",
     "main": "index.js",
