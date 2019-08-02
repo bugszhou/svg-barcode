@@ -123,7 +123,7 @@ API.prototype.getSvg = function() {
 
 // 获取svg base64文本
 API.prototype.getSvgBase64 = function() {
-  return `data:image/svg+xml;utf8,${this.barCodes.svg}`;
+  return `data:image/svg+xml;utf8,${encodeURIComponent(this.barCodes.svg)}`;
 };
 
 // Will create a blank space (usually in between barcodes)
