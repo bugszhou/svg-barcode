@@ -10,6 +10,18 @@
         "type": "git",
         "url": "https://github.com/bugszhou/svg-barcode.git"
     },
+    "keywords": [
+        "bar",
+        "barcode",
+        "svg",
+        "base64",
+        "barcode",
+        "canvas",
+        "weapp",
+        "wxapp",
+        "aliapp",
+        "app"
+    ],
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "dev": "rollup -c rollup.config.js --watch --environment NODE_ENV:development",
