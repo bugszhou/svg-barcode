@@ -3,7 +3,7 @@
 author: bugszhou | Email:bugszhou@outlook.com <br>
 description: a barcode generator
 
-本库基于JsBarcode核心库修改，仅生成svg格式图片和svg的base64文本，主要用于非标准dom和无dom结构中使用。
+本库基于JsBarcode核心库修改，仅生成svg格式图片和svg的DataURL文本(`data:image/svg+xml;utf8,........`)，主要用于非标准dom和无dom结构中使用。
 
 - **支持生成不同颜色的一维码**
 
