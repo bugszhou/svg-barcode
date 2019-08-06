@@ -61,7 +61,7 @@ Examples for browsers:
 #### Simple example:
 ````javascript
 let barcode = cnfBarcode("Hi!").getSvg();
-// or use base64
+// or use DataURL
 let barcode = cnfBarcode("Hi!").getSvgDataURI();
 ````
 
